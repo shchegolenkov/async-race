@@ -1,0 +1,39 @@
+.winners-page-text {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.winners-table {
+  width: 100%;
+  max-width: 560px;
+  border-collapse: collapse;
+  margin: 10px 0;
+}
+
+.winners-table .car-svg {
+  width: 40px;
+}
+
+.winners-table th {
+  background-color: #f0f0f0;
+  color: #000;
+  border: none;
+  font-weight: 400;
+  padding: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.winners-table th:first-child {
+  border-radius: 0.25rem 0 0 0.25rem;
+  width: 76px;
+}
+
+.winners-table th:last-child {
+  border-radius: 0 0.25rem 0.25rem 0;
+  width: 120px;
+}
+
+.winners-table td {
+  text-align: center;
+  padding: 0.4rem 0.2rem;
+}
