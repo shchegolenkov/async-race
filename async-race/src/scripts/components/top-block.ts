@@ -10,10 +10,10 @@ export default class TopBlock extends EventEmitter {
     super();
     this.buttonGarage = createElement('button', 'Garage', 'button', 'button--active', 'button--garage');
     this.buttonWinners = createElement('button', 'Winners', 'button', 'button--garage');
-    this.addListeners();
+    this.addEventListeners();
   }
 
-  private addListeners(): void {
+  private addEventListeners(): void {
     this.buttonWinners.addEventListener('click', () => {
       this.buttonGarage.classList.remove('button--active');
       this.buttonWinners.classList.add('button--active');
@@ -29,10 +29,8 @@ export default class TopBlock extends EventEmitter {
 
   public render(): HTMLElement {
     const navBlock = createElement('div', '', 'top-block');
-
     const header = createElement('h1', 'Async Race 🏁');
     navBlock.appendChild(header);
-
     const nav = createElement('nav', '', 'nav');
     nav.append(this.buttonGarage, this.buttonWinners);
     navBlock.appendChild(nav);
