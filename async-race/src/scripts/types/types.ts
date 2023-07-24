@@ -17,4 +17,15 @@ export interface WinnersRequest {
   order: 'ASC' | 'DESC';
 }
 
+export interface EngineResponse {
+  velocity: number;
+  distance: number;
+}
+
+export interface GaragePageState {
+  carsOnPage: number;
+  currentGaragePage: number;
+  isLastGaragePage: boolean;
+}
+
 export type Listener = (...args: string[]) => void;

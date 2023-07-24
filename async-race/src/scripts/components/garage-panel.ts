@@ -64,7 +64,14 @@ export default class GaragePanel extends EventEmitter {
     this.on('cars-generated', () => {
       this.buttonGenerateCars.disabled = false;
     });
-    this.on('single-race-start', () => this.lockRaceButton());
+    this.on('single-race-start', () => {
+      this.buttonRace.disabled = true;
+      this.buttonUpdateCar.disabled = true;
+      this.inputCarName.disabled = true;
+      this.inputCarColor.disabled = true;
+      this.buttonCreateCar.disabled = true;
+      this.buttonGenerateCars.disabled = true;
+    });
     this.on('single-race-started', () => {
       this.buttonReset.disabled = false;
     });

@@ -10,12 +10,15 @@ export default class GarageBlock extends EventEmitter {
 
   private garageItems: HTMLElement;
 
+  public garageItemsOnPage: GarageItem[];
+
   constructor() {
     super();
 
     this.header = createElement('h2', 'Garage (0)');
     this.page = createElement('p', 'Page #1', 'garage-page-text');
     this.garageItems = createElement('div', '', 'garage-items');
+    this.garageItemsOnPage = [];
   }
 
   public render(): HTMLElement {
@@ -27,9 +30,11 @@ export default class GarageBlock extends EventEmitter {
 
   public renderCars(cars: Car[]): void {
     this.garageItems.innerHTML = '';
+    this.garageItemsOnPage = [];
     cars.forEach(async (car: Car) => {
       const garageItem = new GarageItem(car);
       this.garageItems.appendChild(garageItem.render());
+      this.garageItemsOnPage.push(garageItem);
     });
   }
 
@@ -41,24 +46,41 @@ export default class GarageBlock extends EventEmitter {
     this.page.textContent = `Page #${page}`;
   }
 
-  public raceCars(cars: Car[]): void {
-    cars.forEach(async (car: Car) => {
-      this.emit('start-car', car.id.toString());
+  public raceCars(): void {
+    this.garageItemsOnPage.forEach(async (garageItem) => {
+      await garageItem.startCar();
     });
+  }
+
+  public disableCarsEditButtons(state: boolean): void {
+    this.garageItemsOnPage.forEach((garageItem) => {
+      garageItem.disableCarEditButtons(state);
+    });
+  }
+
+  private disableCarsRaceButtons(state: boolean): void {
+    this.garageItemsOnPage.forEach((garageItem) => {
+      garageItem.disableCarRaceButtons(state);
+    });
+  }
+
+  public async stopRaceCars(): Promise<void> {
+    const promises = this.garageItemsOnPage.map(async (garageItem) => {
+      await garageItem.stopCar();
+    });
+    await Promise.all(promises);
+    this.disableCarsEditButtons(false);
+    this.disableCarsRaceButtons(false);
+    this.emit('all-cars-stopped');
   }
 
   public showWinner(name: string, time: string): void {
     const winBlock = createElement('div', '', 'win-message-block');
-    const winMessage = createElement(
-      'span',
-      `${name} won at ${(+time / 1000).toFixed(2)} seconds!`,
-      'win-message-text'
-    );
+    const winMessage = createElement('span', `${name} won at ${time} seconds!`, 'win-message-text');
     winBlock.appendChild(winMessage);
     this.garageItems.appendChild(winBlock);
     setTimeout(() => {
-      this.garageItems.removeChild(winBlock);
-      this.emit('race-finished');
+      if (this.garageItems.contains(winBlock)) this.garageItems.removeChild(winBlock);
     }, 4100);
   }
 }
