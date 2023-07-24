@@ -153,13 +153,22 @@ export default class GarageItem extends EventEmitter {
     const response = await EngineApi.startStopEngine(this.car.id, 'stopped');
     if (response) {
       this.stopAnimation();
-      this.stopButton.disabled = true;
-      this.startButton.disabled = false;
-      this.selectButton.disabled = false;
-      this.removeButton.disabled = false;
       this.carBlock.style.transform = `translateX(0px)`;
-      if (this.isSingleRaceActive) this.emit('single-race-stopped', this.car.id.toString());
-      this.isSingleRaceActive = false;
+      if (this.isSingleRaceActive) {
+        this.emit('single-race-stopped', this.car.id.toString());
+        this.isSingleRaceActive = false;
+        this.disableCarRaceButtons(false);
+      }
     }
+  }
+
+  public disableCarEditButtons(state: boolean): void {
+    this.selectButton.disabled = state;
+    this.removeButton.disabled = state;
+  }
+
+  public disableCarRaceButtons(state: boolean): void {
+    this.startButton.disabled = state;
+    this.stopButton.disabled = !state;
   }
 }

@@ -60,12 +60,14 @@ export default class GaragePage extends EventEmitter {
     this.on('single-race-start', (id) => {
       this.singleStartedCars.add(id);
       this.disableStatePageButtons();
+      this.garageBlock.disableCarsEditButtons(true);
     });
     this.on('single-race-stopped', (id) => {
       this.singleStartedCars.delete(id);
       if (!this.singleStartedCars.size) {
         this.garagePanel.unlockPanel();
         this.garagePanel.lockResetButton();
+        this.garageBlock.disableCarsEditButtons(false);
         this.setPageButtonsState();
       }
     });
@@ -106,7 +108,6 @@ export default class GaragePage extends EventEmitter {
     this.carsCount = carsCount;
     this.garageBlock.updateCounters(carsCount);
     this.setPageButtonsState();
-    // this.page.textContent = `Page #${page}`;
   }
 
   public renderCars(cars: Car[]): void {
