@@ -56,10 +56,17 @@ export default class GaragePanel extends EventEmitter {
     this.buttonGenerateCars = createElement('button', 'Generage cars', 'button', 'button--generate');
     this.selectedId = '';
 
-    this.on('select-car', (id, name, color) => this.fillSelected(id, name, color));
+    this.addEventListeners();
+  }
 
+  private addEventListeners(): void {
+    this.on('select-car', (id, name, color) => this.fillSelected(id, name, color));
     this.on('cars-generated', () => {
       this.buttonGenerateCars.disabled = false;
+    });
+    this.on('single-race-start', () => this.lockRaceButton());
+    this.on('single-race-started', () => {
+      this.buttonReset.disabled = false;
     });
   }
 
@@ -67,6 +74,7 @@ export default class GaragePanel extends EventEmitter {
     const controlBlock = createElement('div', '', 'control-block');
 
     this.buttonUpdateCar.disabled = true;
+    this.buttonReset.disabled = true;
 
     controlBlock.append(
       this.inputCarName,
@@ -81,7 +89,7 @@ export default class GaragePanel extends EventEmitter {
     );
 
     this.addCarButtonsListeners();
-    this.addRaceListeners();
+    this.addRaceButtonsListeners();
 
     return controlBlock;
   }
@@ -93,6 +101,27 @@ export default class GaragePanel extends EventEmitter {
     this.buttonUpdateCar.disabled = false;
     this.inputSelectedCarName.value = name;
     this.inputSelectedCarColor.value = color;
+  }
+
+  public unlockPanel(): void {
+    this.buttonRace.disabled = false;
+    this.buttonGenerateCars.disabled = false;
+    this.inputCarName.disabled = false;
+    this.inputCarColor.disabled = false;
+    this.buttonCreateCar.disabled = false;
+    if (this.inputSelectedCarName.value) {
+      this.inputSelectedCarName.disabled = false;
+      this.inputSelectedCarColor.disabled = false;
+      this.buttonUpdateCar.disabled = false;
+    }
+  }
+
+  private lockRaceButton(): void {
+    this.buttonRace.disabled = true;
+  }
+
+  public lockResetButton(): void {
+    this.buttonReset.disabled = true;
   }
 
   private addCarButtonsListeners(): void {
@@ -133,9 +162,19 @@ export default class GaragePanel extends EventEmitter {
     });
   }
 
-  private addRaceListeners(): void {
+  private addRaceButtonsListeners(): void {
     this.buttonRace.addEventListener('click', () => {
       this.buttonRace.disabled = true;
+      this.buttonUpdateCar.disabled = true;
+      this.inputCarName.disabled = true;
+      this.inputCarColor.disabled = true;
+      this.buttonCreateCar.disabled = true;
+      this.buttonGenerateCars.disabled = true;
+      this.inputSelectedCarName.disabled = true;
+      this.inputSelectedCarColor.disabled = true;
+      setTimeout(() => {
+        this.buttonReset.disabled = false;
+      }, 2000);
       this.emit('start-race');
     });
 

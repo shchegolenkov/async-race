@@ -2,7 +2,6 @@ const carBrands: string[] = [
   'Acura',
   'Aston Martin',
   'Audi',
-  'Porshe',
   'Tesla',
   'Mersedes',
   'BMW',
